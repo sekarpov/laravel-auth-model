@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Console\Commands\Commands\User;
+namespace App\Console\Commands\User;
 
 use App\Models\User;
 use App\UseCases\Auth\RegisterService;
