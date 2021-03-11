@@ -18,7 +18,7 @@ use Illuminate\Support\Str;
  */
 class User extends Authenticatable
 {
-    use Notifiable;
+    use Notifiable, HasFactory;
 
     public const STATUS_WAIT = 'wait';
     public const STATUS_ACTIVE = 'active';
