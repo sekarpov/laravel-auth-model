@@ -110,4 +110,9 @@ class User extends Authenticatable
     {
         return $this->role === self::ROLE_ADMIN;
     }
+
+    public function hasFilledProfile(): bool
+    {
+        return !empty($this->name);
+    }
 }

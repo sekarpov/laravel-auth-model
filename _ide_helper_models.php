@@ -12,6 +12,31 @@
 
 namespace App\Models{
 /**
+ * App\Models\Contact
+ *
+ * @property int $id
+ * @property int $user_id
+ * @property string $name
+ * @property string $phone
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
+ * @property User $user
+ * @method Builder forUser(User $user)
+ * @method static \Illuminate\Database\Eloquent\Builder|Contact newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Contact newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Contact query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Contact whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Contact whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Contact whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Contact wherePhone($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Contact whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Contact whereUserId($value)
+ */
+	class Contact extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
  * App\Models\User
  *
  * @property int $id
