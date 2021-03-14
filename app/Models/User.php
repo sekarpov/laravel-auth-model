@@ -101,6 +101,24 @@ class User extends Authenticatable
         $this->update(['role' => $role]);
     }
 
+    public function addToFavorites($id): void
+    {
+        if ($this->hasInFavorites($id)) {
+            throw new \DomainException('This contact is already added to favorites.');
+        }
+        $this->favorites()->attach($id);
+    }
+
+    public function removeFromFavorites($id): void
+    {
+        $this->favorites()->detach($id);
+    }
+
+    public function hasInFavorites($id): bool
+    {
+        return $this->favorites()->where('id', $id)->exists();
+    }
+
     public function isModerator(): bool
     {
         return $this->role === self::ROLE_MODERATOR;
@@ -114,5 +132,10 @@ class User extends Authenticatable
     public function hasFilledProfile(): bool
     {
         return !empty($this->name);
+    }
+
+    public function favorites()
+    {
+        return $this->belongsToMany(Contact::class, 'contact_favorites', 'user_id', 'contact_id');
     }
 }

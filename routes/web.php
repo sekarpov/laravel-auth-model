@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Cabinet\ContactController;
+use App\Http\Controllers\Cabinet\FavoriteController;
 use App\Http\Controllers\Cabinet\HomeController as CabinetHomeController;
 use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
@@ -27,6 +28,10 @@ Route::get('/verify/{token}', [RegisterController::class, 'verify'])->name('regi
 
 Route::prefix('cabinet')->middleware(['auth'])->as('cabinet.')->group(function () {
     Route::get('/cabinet', [CabinetHomeController::class, 'index'])->name('home');
+
+    Route::get('/favorites', [FavoriteController::class, 'index'])->name('favorites.index');
+    Route::post('/{contact}/favorites', [FavoriteController::class, 'add'])->name('favorites');
+    Route::delete('/favorites/{contact}', [FavoriteController::class, 'remove'])->name('favorites.remove');
 
     Route::prefix('contacts')->middleware([\App\Http\Middleware\FilledProfile::class])->as('contacts.')->group(function () {
         Route::get('/', [ContactController::class, 'index'])->name('index');
