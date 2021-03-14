@@ -6,6 +6,7 @@ use App\Models\Contact;
 use App\Models\User;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
+use Laravel\Passport\Passport;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -42,5 +43,7 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('manage-own-contact', function (User $user, Contact $contact) {
             return $contact->user_id === $user->id;
         });
+
+        Passport::routes();
     }
 }
