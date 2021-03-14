@@ -51,7 +51,7 @@ services:
         ports:
             - "33061:3306"
     nodejs:
-        image: node:10.11-jessie
+        image: node:12.14
         volumes:
             - ./:/app
         working_dir: /app

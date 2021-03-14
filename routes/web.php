@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\Cabinet\HomeController as CabinetHomeController;
 use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
 
@@ -14,4 +16,14 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', [HomeController::class, 'index']);
+Route::get('/', [HomeController::class, 'index'])->name('home');
+
+Auth::routes();
+
+Route::get('/verify/{token}', [RegisterController::class, 'verify'])->name('register.verify');
+
+
+
+Route::middleware(['auth'])->as('cabinet.')->group(function () {
+    Route::get('/cabinet', [CabinetHomeController::class, 'index'])->name('home');
+});
