@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\User\ContactController;
 use App\Http\Controllers\Api\User\ProfileController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -15,4 +16,13 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:api')->get('/user', [ProfileController::class, 'show']);
+Route::middleware('auth:api')->group(function() {
+    Route::get('/user', [ProfileController::class, 'show']);
+    Route::prefix('contacts')->group(function() {
+        Route::get('/', [ContactController::class, 'index']);
+        Route::post('/store', [ContactController::class, 'store']);
+        Route::get('/{contact}/show', [ContactController::class, 'show']);
+        Route::post('/{contact}/update', [ContactController::class, 'update']);
+        Route::delete('/{contact}/destroy', [ContactController::class, 'destroy']);
+    });
+});
