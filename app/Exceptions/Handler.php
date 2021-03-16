@@ -48,8 +48,10 @@ class Handler extends ExceptionHandler
 
         });
 
-        $this->renderable(function (Throwable $e) {
-            return $this->handleException($e);
+        $this->renderable(function (Throwable $e, $request) {
+            if ($request->is('api/*')) {
+                return $this->handleException($e);
+            }
         });
     }
 

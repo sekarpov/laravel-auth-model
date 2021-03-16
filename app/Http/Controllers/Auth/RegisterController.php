@@ -9,28 +9,20 @@ use App\UseCases\Auth\RegisterService;
 
 class RegisterController extends Controller
 {
-    private $service;
-
-    public function __construct(RegisterService $service)
-    {
-        $this->middleware('guest');
-        $this->service = $service;
-    }
-
     public function showRegistrationForm()
     {
         return view('auth.register');
     }
 
-    public function register(RegisterRequest $request)
+    public function register(RegisterRequest $request, RegisterService $service)
     {
-        $this->service->register($request);
+        $service->register($request);
 
         return redirect()->route('login')
             ->with('success', 'Check your email and click on the link to verify.');
     }
 
-    public function verify($token)
+    public function verify($token, RegisterService $service)
     {
         if (!$user = User::where('verify_token', $token)->first()) {
             return redirect()->route('login')
@@ -38,7 +30,7 @@ class RegisterController extends Controller
         }
 
         try {
-            $this->service->verify($user->id);
+            $service->verify($user->id);
             return redirect()->route('login')->with('success', 'Your e-mail is verified. You can now login.');
         } catch (\DomainException $e) {
             return redirect()->route('login')->with('error', $e->getMessage());

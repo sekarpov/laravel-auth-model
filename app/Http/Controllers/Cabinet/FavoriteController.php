@@ -9,14 +9,6 @@ use Illuminate\Support\Facades\Auth;
 
 class FavoriteController extends Controller
 {
-    private $service;
-
-    public function __construct(FavoriteService $service)
-    {
-        $this->service = $service;
-        $this->middleware('auth');
-    }
-
     public function index()
     {
         $contacts = Contact::favoredByUser(Auth::user())->orderByDesc('id')->paginate(20);
@@ -24,10 +16,10 @@ class FavoriteController extends Controller
         return view('cabinet.favorites.index', compact('contacts'));
     }
 
-    public function add(Contact $contact)
+    public function add(Contact $contact, FavoriteService $service)
     {
         try {
-            $this->service->add(Auth::id(), $contact->id);
+            $service->add(Auth::id(), $contact->id);
         } catch (\DomainException $e) {
             return back()->with('error', $e->getMessage());
         }
@@ -35,10 +27,10 @@ class FavoriteController extends Controller
         return redirect()->route('cabinet.contacts.show', $contact)->with('success', 'Контакт доавлен в избранные.');
     }
 
-    public function remove(Contact $contact)
+    public function remove(Contact $contact, FavoriteService $service)
     {
         try {
-            $this->service->remove(Auth::id(), $contact->id);
+            $service->remove(Auth::id(), $contact->id);
         } catch (\DomainException $e) {
             return back()->with('error', $e->getMessage());
         }

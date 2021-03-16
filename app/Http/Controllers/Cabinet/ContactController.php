@@ -12,13 +12,6 @@ use Illuminate\Support\Facades\Gate;
 
 class ContactController extends Controller
 {
-    private $service;
-
-    public function __construct(ContactService $service)
-    {
-        $this->service = $service;
-    }
-
     /**
      * Display a listing of the resource.
      *
@@ -45,12 +38,13 @@ class ContactController extends Controller
      * Store a newly created resource in storage.
      *
      * @param \App\Http\Requests\Contacts\CreateRequest $request
+     * @param \App\UseCases\Contacts\ContactService $service
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function store(CreateRequest $request)
+    public function store(CreateRequest $request, ContactService $service)
     {
         try {
-            $contact = $this->service->create(Auth::id(), $request);
+            $contact = $service->create(Auth::id(), $request);
         } catch (\DomainException $e) {
             return back()->with('error', $e->getMessage());
         }
@@ -87,13 +81,14 @@ class ContactController extends Controller
      *
      * @param \App\Http\Requests\Contacts\EditRequest $request
      * @param \App\Models\Contact $contact
+     * @param \App\UseCases\Contacts\ContactService $service
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(EditRequest $request, Contact $contact)
+    public function update(EditRequest $request, Contact $contact, ContactService $service)
     {
         $this->checkAccess($contact);
         try {
-            $this->service->edit($contact->id, $request);
+            $service->edit($contact->id, $request);
         } catch (\DomainException $e) {
             return back()->with('error', $e->getMessage());
         }
@@ -105,13 +100,14 @@ class ContactController extends Controller
      * Remove the specified resource from storage.
      *
      * @param \App\Models\Contact $contact
+     * @param \App\UseCases\Contacts\ContactService $service
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function destroy(Contact $contact)
+    public function destroy(Contact $contact, ContactService $service)
     {
         $this->checkAccess($contact);
         try {
-            $this->service->remove($contact->id);
+            $service->remove($contact->id);
         } catch (\DomainException $e) {
             return back()->with('error', $e->getMessage());
         }

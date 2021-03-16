@@ -9,20 +9,12 @@ use App\Http\Resources\Contacts\ContactDetailResource;
 use App\Http\Resources\Contacts\ContactListResource;
 use App\Models\Contact;
 use App\UseCases\Contacts\ContactService;
-use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 
 class ContactController extends Controller
 {
-    private $service;
-
-    public function __construct(ContactService $service)
-    {
-        $this->service = $service;
-    }
-
     /**
      * Display a listing of the resource.
      *
@@ -39,11 +31,12 @@ class ContactController extends Controller
      * Store a newly created resource in storage.
      *
      * @param \App\Http\Requests\Contacts\CreateRequest $request
+     * @param \App\UseCases\Contacts\ContactService $service
      * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\Response|object
      */
-    public function store(CreateRequest $request)
+    public function store(CreateRequest $request, ContactService $service)
     {
-        $contact = $this->service->create(Auth::id(), $request);
+        $contact = $service->create(Auth::id(), $request);
 
         return (new ContactDetailResource($contact))
             ->response()
@@ -68,12 +61,13 @@ class ContactController extends Controller
      *
      * @param \App\Http\Requests\Contacts\EditRequest $request
      * @param \App\Models\Contact $contact
+     * @param \App\UseCases\Contacts\ContactService $service
      * @return \App\Http\Resources\Contacts\ContactDetailResource
      */
-    public function update(EditRequest $request, Contact $contact)
+    public function update(EditRequest $request, Contact $contact, ContactService $service)
     {
         $this->checkAccess($contact);
-        $this->service->edit($contact->id, $request);
+        $service->edit($contact->id, $request);
 
         return new ContactDetailResource(Contact::findOrFail($contact->id));
 
@@ -83,12 +77,13 @@ class ContactController extends Controller
      * Remove the specified resource from storage.
      *
      * @param \App\Models\Contact $contact
+     * @param \App\UseCases\Contacts\ContactService $service
      * @return \Illuminate\Http\JsonResponse
      */
-    public function destroy(Contact $contact)
+    public function destroy(Contact $contact, ContactService $service)
     {
         $this->checkAccess($contact);
-        $this->service->remove($contact->id);
+        $service->remove($contact->id);
 
         return response()->json([], Response::HTTP_NO_CONTENT);
     }
